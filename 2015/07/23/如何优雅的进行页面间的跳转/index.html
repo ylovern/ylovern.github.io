@@ -226,7 +226,7 @@
  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[XXCoreActionManager doActionForTarget:target]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
 <p> 来进行跳转。真正的<code>write once，use anywhere</code></p>
 </li>
-<li><p>针对头像、评论、转发等多处使用的子控件，可以把事件由自己接收，通过XXCoreActionManager<br>来进行跳转。即做到了代码分离，使之成为真正独立的控件，便于复用。</p>
+<li><p>针对头像、评论、转发等多处使用的子控件，可以把事件由自己接收，通过XXCoreActionManager来进行跳转。即做到了代码分离，使之成为真正独立的控件，便于复用。</p>
 </li>
 </ol>
 <p>下面是一个简单例子：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MFUserHeadButton</span></span></span><br><span class="line">-(<span class="keyword">void</span>)awakeFromNib&#123;</span><br><span class="line">    [<span class="keyword">self</span> addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(toUserDetail) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)toUserDetail&#123;</span><br><span class="line">    <span class="built_in">NSDictionary</span> *target = @&#123;<span class="string">@"action"</span>:<span class="string">@"user"</span>,</span><br><span class="line">                           <span class="string">@"data"</span>:@&#123;<span class="string">@"user_id"</span>:@(<span class="keyword">self</span><span class="variable">.tag</span>)&#125;&#125;;</span><br><span class="line">    [XXCoreActionManager doActionForTarget:target];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -246,7 +246,7 @@
 <li>针对各种有跳转功能的控件，可以做到真的解耦。只需要把它放到他需要显示的位置。<br>告诉它对应的参数就可以了。方便复用和后期的维护。</li>
 <li>这次想说的只是一个思路，代码很简单。其实可以使用的地方还有很多。不只是跳转<br>各位童鞋可以自己思考。有什么不明白的可以留言，如果觉得那里不合适更欢迎留言指教<br>或交流。</li>
 </ol>
-<h2 id="写在后面的废话">写在后面的废话</h2><p>从读大学接触到计算机技术这一领域，我就被这个圈子的氛围深深的触动了，这是一个<br>如此自由、分享、开放的圈子。我从无数人的的分享中汲取着知识（开源的代码，分享的博客）<br>，我受益于这种环境，我就想对它做出回馈，写出这篇文章，即希望能帮助一些人，也希望<br>能与大家有更多的交流。最后，谢谢那些无私的做出各种奉献的人。</p>
+<h2 id="写在后面的废话">写在后面的废话</h2><p>从读大学接触到计算机技术这一领域，我就被这个圈子的氛围深深的触动了，这是一个如此自由、分享、开放的圈子。我从无数人的的分享中汲取着知识（开源的代码，分享的博客），我受益于这种环境，我就想对它做出回馈，写出这篇文章，即希望能帮助一些人，也希望能与大家有更多的交流。最后，谢谢那些无私的做出各种奉献的人。</p>
 
       
     </div>
