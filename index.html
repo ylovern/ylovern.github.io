@@ -205,8 +205,7 @@
 
       
         
-          <p>在你的开发过程中，是否遇到过如下的需求：</p>
-<ol>
+          <h2 id="在你的开发过程中，是否遇到过如下的需求：">在你的开发过程中，是否遇到过如下的需求：</h2><ol>
 <li>在tableView类型的展示列表中，点击每个cell中人物头像都可以跳转到人物详情，可参见微博中的<br>头像，同理包括转发、评论按钮、各种链接及linkcard。</li>
 <li>跳转到任意页面<ul>
 <li>产品要求，某个页面的不同banner图，点击可以跳转到任何一个页面，可能是原生的页面A、页面B，或者是<br>web页C。</li>
@@ -215,111 +214,12 @@
 </ul>
 </li>
 </ol>
-<p>以上2种需求，我想大多数开发者都遇到过，并且可以实现这种功能。毕竟，<br>这是比较基础的功能。但是代码未必那么优雅。</p>
-<h2 id="一般处理办法">一般处理办法</h2><p>针对<code>1.</code>，一般初学者会用target或者block等方法在tableView的代理方法拿到事件，<br>并把要执行的跳转写到controller里。功能是可以实现的，但问题是这种cell及相似的cell<br>（布局有些变化，或者多几个少几个控件）一般出现在多个页面。这样的话相同的代码<br>就会出现在多个地方。就算把跳转方法抽取出来写成category，但是target或者block<br>总是每个地方都要写的。</p>
-<p>针对<code>2.</code>，初级的方法是每个地方写一坨判断及跳转，高级一些是抽取出来写在基类或者<br>category。</p>
-<h2 id="优雅的解决办法">优雅的解决办法</h2><p>纵观上面各种情况，总结起来就是一句话，<code>在任意的地方触发事件
-（可以是推送，拦截的js跳转，各种控件的点击事件）可以跳转到任意界面。</code></p>
-<p>所以我们可以统一用一个控制跳转的manager来完成跳转。</p>
-<ol>
-<li><p>与后端约定好数据结构，例如：</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary *<span class="keyword">target</span> = @&#123;@<span class="string">"action"</span> : @<span class="string">"user"</span>,</span><br><span class="line">                           @<span class="string">"data"</span>   : @&#123;@<span class="string">"user_id"</span> : @(123456)&#125;&#125;;</span><br></pre></td></tr></table></figure>
-<p>就是跳转到id为123456的用户页面，如果跳转需要更多的数据，可以在data的value<br>里面继续添加。</p>
-</li>
-<li><p>创建一个用来跳转的类，可以起的牛x的名字，XXCoreActionManager。<br>创建一个类方法：</p>
- <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">BOOL</span>)doActionForTarget:(<span class="built_in">NSDictionary</span> *)target&#123;</span><br><span class="line">    <span class="comment">//根据你的app结构，来取得你当前的controller，由它来进行跳转</span></span><br><span class="line">    <span class="built_in">UIApplication</span> *application = [<span class="built_in">UIApplication</span> sharedApplication];</span><br><span class="line">    AppDelegate *myAppDelegate = (AppDelegate *)[application delegate];</span><br><span class="line">    <span class="built_in">UIViewController</span> *viewController;</span><br><span class="line">    <span class="keyword">if</span> ([myAppDelegate getTabbarSelectedView]) &#123;</span><br><span class="line">        viewController = [myAppDelegate getTabbarSelectedView]<span class="variable">.visibleViewController</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>([json[<span class="string">@"action"</span>] isEqualToString:<span class="string">@"film_view"</span>])&#123;</span><br><span class="line">        MFMaterialListViewController *materialListVC = [[MFMaterialListViewController alloc] initWithNibName:<span class="string">@"MFMaterialListViewController"</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">        materialListVC<span class="variable">.hidesBottomBarWhenPushed</span> = <span class="literal">YES</span>;</span><br><span class="line">        materialListVC<span class="variable">.filmId</span> = json[<span class="string">@"data"</span>][<span class="string">@"film_id"</span>];</span><br><span class="line">        [viewController<span class="variable">.navigationController</span> pushViewController:materialListVC animated:<span class="literal">YES</span>];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>([json[<span class="string">@"action"</span>] isEqualToString:<span class="string">@"home"</span>])&#123;</span><br><span class="line">        [myAppDelegate getTabbar]<span class="variable">.selectedIndex</span> = <span class="number">0</span>;</span><br><span class="line">        [viewController<span class="variable">.navigationController</span> popToRootViewControllerAnimated:<span class="literal">YES</span>];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 在刚才定义的数据结构中，<code>action</code>的值为需要跳转的页面，<code>data</code>的值跳转所需要要的<br> 参数，比如<code>id</code>、<code>type</code>等。服务器只需要传入相应的数据就可以用</p>
- <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[XXCoreActionManager doActionForTarget:target]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p> 来进行跳转。真正的<code>write once，use anywhere</code></p>
-</li>
-<li><p>针对头像、评论、转发等多处使用的子控件，可以把事件由自己接收，通过XXCoreActionManager<br>来进行跳转。即做到了代码分离，使之成为真正独立的控件，便于复用。</p>
-</li>
-</ol>
-<p>下面是一个简单例子：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MFUserHeadButton</span></span></span><br><span class="line">-(<span class="keyword">void</span>)awakeFromNib&#123;</span><br><span class="line">    [<span class="keyword">self</span> addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(toUserDetail) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)toUserDetail&#123;</span><br><span class="line">    <span class="built_in">NSDictionary</span> *target = @&#123;<span class="string">@"action"</span>:<span class="string">@"user"</span>,</span><br><span class="line">                           <span class="string">@"data"</span>:@&#123;<span class="string">@"user_id"</span>:@(<span class="keyword">self</span><span class="variable">.tag</span>)&#125;&#125;;</span><br><span class="line">    [XXCoreActionManager doActionForTarget:target];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这就是一个简单的实现跳转到个人页功能的头像控件实现。</p>
-<p>如果你问<code>user_id</code>的值怎么来的？</p>
-<blockquote>
-<p>当然是configCell的时候传给view的<code>tag</code>的。</p>
-</blockquote>
-<p>你可能会说,我的跳转需要多个参数啊，你一个tag不够用啊亲。</p>
-<blockquote>
-<p>可以定义一个NSDictionary属性接收啊。</p>
-<p>如果你用原生的UI控件，那让强大的runtime给你加喽</p>
-</blockquote>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)setDict:(<span class="built_in">NSDictionary</span> *)dict &#123;</span><br><span class="line">        objc_setAssociatedObject(<span class="keyword">self</span>, dictKey, dict, OBJC_ASSO<span class="built_in">CIATION_RETAIN_NONATOMIC</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSDictionary</span> *)dict &#123;</span><br><span class="line">        <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, dictKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="总结">总结</h2><ol>
-<li>通过XXCoreActionManager，你可以做到无论你身在何处（哪一个controller），要<br>到何处去（跳转到哪一个controller），你只需要叫来XXCoreActionManager，告诉它<br>你的目的地（target）。你就可以做到想跳就跳。真正的<code>write once，use anywhere</code>。</li>
-<li>针对各种有跳转功能的控件，可以做到真的解耦。只需要把它放到他需要显示的位置。<br>告诉它对应的参数就可以了。方便复用和后期的维护。</li>
-<li>这次想说的只是一个思路，代码很简单。其实可以使用的地方还有很多。不只是跳转<br>各位童鞋可以自己思考。有什么不明白的可以留言，如果觉得那里不合适更欢迎留言指教<br>或交流。</li>
-</ol>
-<h2 id="写在后面的废话">写在后面的废话</h2><p>从读大学接触到计算机技术这一领域，我就被这个圈子的氛围深深的触动了，这是一个<br>如此自由、分享、开放的圈子。我从无数人的的分享中汲取着知识（开源的代码，分享的博客）<br>，我受益于这种环境，我就想对它做出回馈，写出这篇文章，即希望能帮助一些人，也希望<br>能与大家有更多的交流。最后，谢谢那些无私的做出各种奉献的人。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/06/第一篇文字/">
-                第一篇文字
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-06
-        </span>
-
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/07/06/第一篇文字/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/06/第一篇文字/"></span>
+<p>以上2种需求，我想大多数开发者都遇到过，并且可以实现这种功能。毕竟，<br>这是比较基础的功能。但是代码未必那么优雅。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/23/如何优雅的进行页面间的跳转/#more">
+              阅读全文 &raquo;
             </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>**凌晨的发布</p>
-
+          </div>
         
       
     </div>
@@ -372,7 +272,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -386,7 +286,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

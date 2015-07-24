@@ -200,8 +200,7 @@
       
 
       
-        <p>在你的开发过程中，是否遇到过如下的需求：</p>
-<ol>
+        <h2 id="在你的开发过程中，是否遇到过如下的需求：">在你的开发过程中，是否遇到过如下的需求：</h2><ol>
 <li>在tableView类型的展示列表中，点击每个cell中人物头像都可以跳转到人物详情，可参见微博中的<br>头像，同理包括转发、评论按钮、各种链接及linkcard。</li>
 <li>跳转到任意页面<ul>
 <li>产品要求，某个页面的不同banner图，点击可以跳转到任何一个页面，可能是原生的页面A、页面B，或者是<br>web页C。</li>
@@ -210,7 +209,7 @@
 </ul>
 </li>
 </ol>
-<p>以上2种需求，我想大多数开发者都遇到过，并且可以实现这种功能。毕竟，<br>这是比较基础的功能。但是代码未必那么优雅。</p>
+<p>以上2种需求，我想大多数开发者都遇到过，并且可以实现这种功能。毕竟，<br>这是比较基础的功能。但是代码未必那么优雅。<br><a id="more"></a></p>
 <h2 id="一般处理办法">一般处理办法</h2><p>针对<code>1.</code>，一般初学者会用target或者block等方法在tableView的代理方法拿到事件，<br>并把要执行的跳转写到controller里。功能是可以实现的，但问题是这种cell及相似的cell<br>（布局有些变化，或者多几个少几个控件）一般出现在多个页面。这样的话相同的代码<br>就会出现在多个地方。就算把跳转方法抽取出来写成category，但是target或者block<br>总是每个地方都要写的。</p>
 <p>针对<code>2.</code>，初级的方法是每个地方写一坨判断及跳转，高级一些是抽取出来写在基类或者<br>category。</p>
 <h2 id="优雅的解决办法">优雅的解决办法</h2><p>纵观上面各种情况，总结起来就是一句话，<code>在任意的地方触发事件
@@ -263,18 +262,6 @@
         </div>
       
 
-      
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2015/07/06/第一篇文字/">第一篇文字</a>
-            
-          </div>
-        </div>
       
 
       
@@ -362,7 +349,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -376,7 +363,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -420,7 +407,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一般处理办法"><span class="nav-number">1.</span> <span class="nav-text">一般处理办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优雅的解决办法"><span class="nav-number">2.</span> <span class="nav-text">优雅的解决办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在后面的废话"><span class="nav-number">4.</span> <span class="nav-text">写在后面的废话</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#在你的开发过程中，是否遇到过如下的需求："><span class="nav-number">1.</span> <span class="nav-text">在你的开发过程中，是否遇到过如下的需求：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一般处理办法"><span class="nav-number">2.</span> <span class="nav-text">一般处理办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优雅的解决办法"><span class="nav-number">3.</span> <span class="nav-text">优雅的解决办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在后面的废话"><span class="nav-number">5.</span> <span class="nav-text">写在后面的废话</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
