@@ -223,7 +223,7 @@
 <p>所以我们可以统一用一个控制跳转的manager来完成跳转。</p>
 <ol>
 <li><p>与后端约定好数据结构，例如：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary *target = @&#123;@&#34;action&#34; : @&#34;user&#34;,&#10;                           @&#34;data&#34;   : @&#123;@&#34;user_id&#34; : @(123456)&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary *<span class="keyword">target</span> = @&#123;@<span class="string">"action"</span> : @<span class="string">"user"</span>,</span><br><span class="line">                           @<span class="string">"data"</span>   : @&#123;@<span class="string">"user_id"</span> : @(123456)&#125;&#125;;</span><br></pre></td></tr></table></figure>
 <p>就是跳转到id为123456的用户页面，如果跳转需要更多的数据，可以在data的value<br>里面继续添加。</p>
 </li>
 <li><p>创建一个用来跳转的类，可以起的牛x的名字，XXCoreActionManager。<br>创建一个类方法：</p>
